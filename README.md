@@ -30,7 +30,91 @@ STEP-8: Repeat the above steps to generate the entire cipher text.
 
 
 ## PROGRAM
-
+```
+#include <stdio.h> 
+#include <string.h> 
+#include <ctype.h> 
+ 
+void generateKey(char *message, char *key, char *newKey) { 
+    int msgLen = strlen(message); 
+    int keyLen = strlen(key); 
+    int i, j; 
+    for (i = 0, j = 0; i < msgLen; i++) { 
+        if (isalnum(message[i])) { 
+            newKey[i] = toupper(key[j % keyLen]);   
+            j++; 
+        } else { 
+            newKey[i] = message[i]; 
+        } 
+    } 
+    newKey[msgLen] = '\0'; 
+} 
+ 
+void encrypt(char *message, char *key, char *cipherText) { 
+    int msgLen = strlen(message); 
+    for (int i = 0; i < msgLen; i++) { 
+        if (isalpha(message[i])) { 
+            char m = toupper(message[i]); 
+            char k = toupper(key[i]); 
+            cipherText[i] = ((m - 'A') + (k - 'A')) % 26 + 'A'; 
+        }  
+        else if (isdigit(message[i])) { 
+            char m = message[i] - '0'; 
+            char k = (toupper(key[i]) - 'A') % 10;  
+            cipherText[i] = ((m + k) % 10) + '0'; 
+        } 
+        else { 
+            cipherText[i] = message[i]; 
+        } 
+    } 
+    cipherText[msgLen] = '\0'; 
+} 
+ 
+void decrypt(char *cipherText, char *key, char *plainText) { 
+    int msgLen = strlen(cipherText); 
+    for (int i = 0; i < msgLen; i++) { 
+        if (isalpha(cipherText[i])) { 
+            char c = toupper(cipherText[i]); 
+            char k = toupper(key[i]); 
+            plainText[i] = ((c - 'A') - (k - 'A') + 26) % 26 + 'A'; 
+        }  
+        else if (isdigit(cipherText[i])) { 
+            char c = cipherText[i] - '0'; 
+            char k = (toupper(key[i]) - 'A') % 10; 
+            plainText[i] = ((c - k + 10) % 10) + '0'; 
+        } 
+        else { 
+            plainText[i] = cipherText[i]; 
+        } 
+    } 
+    plainText[msgLen] = '\0'; 
+} 
+ 
+int main() { 
+    char message[100], key[100], newKey[100], cipherText[100], 
+decryptedText[100]; 
+ 
+    prin ("Enter the plain text: "); 
+    fgets(message, sizeof(message), stdin); 
+    message[strcspn(message, "\n")] = '\0'; 
+ 
+    prin ("Enter the keyword: "); 
+    scanf("%s", key); 
+ 
+    generateKey(message, key, newKey); 
+ 
+    encrypt(message, newKey, cipherText); 
+    prin ("\nEncrypted Text: %s\n", cipherText); 
+ 
+    decrypt(cipherText, newKey, decryptedText); 
+    printf ("Decrypted Text: %s\n", decryptedText); 
+ 
+    return 0; 
+} 
+```
 ## OUTPUT
+<img width="631" height="417" alt="image" src="https://github.com/user-attachments/assets/7c49abc3-5b14-4b45-a178-b27faa398afb" />
+
 
 ## RESULT
+Thus the program for vigenere cipher is executed.
